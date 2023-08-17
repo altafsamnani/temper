@@ -9,7 +9,6 @@ The project is created with
 - Sqlite memory
 - Docker
 - Console Command
-- Phpunit Testcases
 
 ## Installation
 
