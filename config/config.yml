@@ -1,0 +1,9 @@
+parameters:
+    app.environment: '%env(APP_ENV)%'
+    app.enable_in_memory_database: '%env(ENABLE_IN_MEMORY_DATABASE)%'
+    app.database_url: '%env(DATABASE_URL)%'
+    app.entity_paths: ['/app/src/Domain/Entity']
+    app.spots_amount: '%env(int:SPOTS_AMOUNT)%'
+
+imports:
+    - { resource: services.yml }

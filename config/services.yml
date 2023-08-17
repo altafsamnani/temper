@@ -1,0 +1,82 @@
+# config/services.yaml
+services:
+    _defaults:
+      public: true
+    temper_orm_setup:
+      class: Doctrine\ORM\ORMSetup:
+      factory: ['Doctrine\ORM\ORMSetup', 'createAttributeMetadataConfiguration']
+      arguments: [ '%app.entity_paths%', true]
+
+    temper_connection:
+      class: Doctrine\DBAL\Connection:
+      factory: ['Doctrine\DBAL\DriverManager', 'getConnection']
+      arguments:
+        - { url: '%app.database_url%'}
+        - '@temper_orm_setup'
+
+    temper_entity_manager:
+      class: Doctrine\ORM\EntityManager
+      arguments:
+        - '@temper_connection'
+        - '@temper_orm_setup'
+
+    Doctrine\ORM\EntityManagerInterface: '@temper_entity_manager'
+
+    temper_vehicle_repo:
+      class: App\Domain\Repository\VehicleRepository
+      factory: ["@temper_entity_manager", getRepository]
+      arguments:
+          - App\Domain\Entity\Vehicle
+
+    App\Domain\Repository\VehicleRepositoryInterface: '@temper_vehicle_repo'
+
+    temper_spot_repo:
+      class: App\Domain\Repository\SpotRepository
+      factory: ["@temper_entity_manager", getRepository]
+      arguments:
+        - App\Domain\Entity\Spot
+
+    App\Domain\Repository\SpotRepositoryInterface: '@temper_spot_repo'
+
+    temper_database_loader:
+      class: App\Infrastructure\Database\TempMemoryDatabaseLoader
+      public: true
+      factory: ['App\Infrastructure\Database\TempMemoryDatabaseLoader', 'create']
+      arguments:
+        - '@temper_entity_manager'
+        - { memoryConnection: '%app.enable_in_memory_database%', 'spotsAmount': '%app.spots_amount%'}
+
+    temper_parking_service:
+      class: App\Application\Service\ParkingVerificationService
+      arguments:
+        - '@temper_spot_repo'
+
+    temper_verify_validator:
+      class: App\Application\Validator\VerifyValidator
+      arguments:
+       - '@temper_parking_service'
+
+    temper_arrival_validator:
+       class: App\Application\Validator\ArrivalValidator
+       arguments:
+         - '@temper_vehicle_repo'
+
+    temper_departure_validator:
+      class: App\Application\Validator\DepartureValidator
+      arguments:
+       - '@temper_vehicle_repo'
+
+    temper_parking_management_service:
+      class: App\Application\Service\ParkingManagementService
+      arguments:
+        - '@temper_spot_repo'
+        - '@temper_vehicle_repo'
+
+    temper_parking_command:
+      class: App\Application\Command\TemperParkingCommand
+      arguments:
+        - '@temper_parking_service'
+        - '@temper_parking_management_service'
+        - '@temper_verify_validator'
+        - '@temper_arrival_validator'
+        - '@temper_departure_validator'

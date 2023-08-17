@@ -1,0 +1,20 @@
+# Composer
+/vendor
+
+# PHPCS
+/phpcs.xml
+/.phpcs-cache
+
+# PHPStan
+/phpstan.neon
+
+# PHPUnit
+/.phpunit.result.cache
+/coverage
+
+# JetBrains
+.idea
+
+# App
+/.env
+/.env.test

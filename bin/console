@@ -1,0 +1,23 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use App\Infrastructure\DependencyInjection\RegisterServices;
+use App\Infrastructure\Database\DatabaseLoaderInterface;
+use Symfony\Component\Console\Application;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+$container = RegisterServices::init();
+
+$application = new Application();
+
+/** @var ContainerBuilder $container */
+/** @var DatabaseLoaderInterface $inMemoryDatabase */
+
+$inMemoryDatabase = $container->get('temper_database_loader');
+$inMemoryDatabase->load();
+
+$application->add($container->get('temper_parking_command'));
+$application->run();
