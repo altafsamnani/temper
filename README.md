@@ -5,7 +5,7 @@ Please implement a software solution that will enable cars to park in a parking 
 
 Interactive CLI app for parking Arrival and Departure.
 The project is created with
-- OOP PHP (+CQRS Application/Domain/Infrastructure)
+- OOP PHP (+DDD Application/Domain/Infrastructure)
 - Sqlite memory
 - Docker
 - Console Command
@@ -25,7 +25,7 @@ The project is created with
 
 ## Explanation for Directory Structure
 
-1) I have tried to use CQRS and using console command
+1) I have tried to use DDD and using console command
 There are app variables inside an .env file including memory storage
 
 Since I wanted to cover maximum functionalities, so I took liberty and used some composer packages for maximum output. 
@@ -33,7 +33,7 @@ Since I wanted to cover maximum functionalities, so I took liberty and used some
 2) `bin/console` is the place where execution begins
 3) `config` folder, config files `config.yml` with parameters and `services.yml` takes care of dependency injection 
 
-3) `Application - Domain - Infrastructure`: Tried to use CQRS pattern for the code, where 
+3) `Application - Domain - Infrastructure`: Tried to use DDD pattern for the code, where 
 `Infrastructure` communicates with external libraries and implementation of contracts for domain, application layer
 `Domain` where all the definition and interfaces stays
 `Application` Where command and Query filters can stay, Commands represent intent for a system state change and must contain all the information that is necessary to successfully apply it to a system. Commands are physically placed in an application layer.
